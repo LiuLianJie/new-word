@@ -3,7 +3,7 @@ var ejs = require('ejs');
 var path = require('path');
 
 var app = express();
-app.set('port',process.env.PORT || 3000);
+app.set('port',process.env.PORT || 3001);
 app.set('views',__dirname + '/static');
 app.engine('.html',ejs.__express);
 app.set('view engine','html');
