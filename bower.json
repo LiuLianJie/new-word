@@ -1,0 +1,22 @@
+{
+  "name": "new-word",
+  "version": "0.0.0",
+  "homepage": "https://github.com/LiuLianJie/new-word",
+  "authors": [
+    "LiuLianJie <lj316641206@163.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "console-polyfill": "~0.2.2",
+    "es5-shim": "~4.1.13",
+    "react": "~0.13.3"
+  }
+}

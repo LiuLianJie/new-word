@@ -1,0 +1,23 @@
+{
+  "name": "new-word",
+  "version": "1.0.0",
+  "description": "a tool for recording new words , it focus on programmer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiuLianJie/new-word.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LiuLianJie/new-word/issues"
+  },
+  "homepage": "https://github.com/LiuLianJie/new-word#readme",
+  "dependencies": {
+    "ejs": "^2.3.4",
+    "express": "^4.13.3"
+  }
+}
