@@ -1,0 +1,12 @@
+body{
+	padding: 0;
+	margin: 0;
+	background-color:#f5f5f5; 
+}
+
+.transfromCenter{
+	transform:translate(-50%,-50%);
+	-ms-transform:translate(-50%,-50%);
+	-moz-transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);
+}
