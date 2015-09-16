@@ -1,3 +1,5 @@
+'use strict';
+
 var LoginForm = React.createClass({
 	getInitialState: function(){
 		return {
@@ -14,7 +16,13 @@ var LoginForm = React.createClass({
 			data:{username:username,password:password},
 			dataType:'json',
 			success:function(data){
-				
+				console.log(data);
+				var res = JSON.parse(data);
+				if(res.s){
+					alert('登录');
+				}else{
+					alert(res['m']);
+				}
 			}
 		});
 	},
