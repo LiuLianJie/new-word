@@ -64,9 +64,72 @@ React.render(
 	document.getElementById('container')
 );
 */
+
+var NavSearchBar = React.createClass({
+    render: function(){
+        return (
+            <form className="navbar-form navbar-right" role="search">
+                <div className="form-group">
+                    <input type="text" className="form-control" placeholder="Search"/>
+                </div>
+                <button type="submit" className="btn btn-default">Submit</button>
+            </form>
+        );
+    }
+});
+
+var NavHeader = React.createClass({
+    render: function(){
+        return (
+            <nav className="navbar navbar-inverse">
+                <div className="container-fluid">
+                    <div className="navbar-header">
+                        <a className="navbar-brand" href="#">
+                            smallfish
+                        </a>
+                        <NavSearchBar />
+                        <button type="button" className="btn btn-default navbar-btn navbar-right pull-right">Sign in</button>
+                    </div>
+                </div>
+            </nav>
+        );
+    }
+});
+
+var WordItem = React.createClass({
+    render: function(){
+        return(
+            <div>
+                <h2>cabnnsdfsdf</h2>
+                <p>sdfsdf</p>
+                <hr/>
+            </div>
+        );
+    }
+})
+
+var WordList = React.createClass({
+    render: function(){
+        return(
+            <div className="col-md-8 col-md-offset-2">
+                <WordItem word="ss" sentance="sfsdfsdf"/>
+                <WordItem word="sdf" sentance="234234"/>
+                <WordItem word="234" sentance="sfsdfsdf"/>
+                <WordItem word="ssdsf" sentance="sfsdfsdf"/>
+                <WordItem word="ssdfsdf" sentance="sfsdfsdf"/>
+            </div>
+        );
+    }
+});
+
 var MainPage = React.createClass({
     render: function(){
-        return <div>MainPage</div>;
+        return (
+            <div>
+                <NavHeader/>
+                <WordList />
+            </div>
+        );
     }
 });
 
