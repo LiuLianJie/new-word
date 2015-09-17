@@ -59,29 +59,122 @@ var LoginForm = React.createClass({
 	}
 });
 
+var BootstrapModal = React.createClass({
+  // The following two methods are the only places we need to
+  // integrate Bootstrap or jQuery with the components lifecycle methods.
+  componentDidMount: function() {
+    // When the component is added, turn it into a modal
+    $(React.findDOMNode(this))
+      .modal({backdrop: 'static', keyboard: false, show: false});
+  },
+  componentWillUnmount: function() {
+    $(React.findDOMNode(this)).off('hidden', this.handleHidden);
+  },
+  close: function() {
+    $(React.findDOMNode(this)).modal('hide');
+  },
+  open: function() {
+    $(React.findDOMNode(this)).modal('show');
+  },
+  render: function() {
+    var confirmButton = null;
+    var cancelButton = null;
+
+    return (
+      <div className="modal fade">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button
+                type="button"
+                className="close"
+                onClick={this.handleCancel}>
+                &times;
+              </button>
+              <h3>{this.props.title}</h3>
+            </div>
+            <div className="modal-body">
+              {this.props.children}
+            </div>
+            <div className="modal-footer">
+              {cancelButton}
+              {confirmButton}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  handleCancel: function() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  },
+  handleConfirm: function() {
+    if (this.props.onConfirm) {
+      this.props.onConfirm();
+    }
+  }
+});
+
 var NavSearchBar = React.createClass({
     searchHandle: function(){
+        this.refs.modal.open();
+        /*
         var mainpage = this.props.mainpage;
-        console.log(mainpage.state.wordlist);
         var search = React.findDOMNode(this.refs.searchInput).value;
         if(!search){
             alert('不能为空');
             return;
         }
-        var newwords = mainpage.state.wordlist.concat({word:search,sentence:'333'});
-        mainpage.setState({wordlist:newwords});
-        //this.props.mainpage.setState({data:d})
-        //alert('searchHandle');
+        */
+        /*
+        $.ajax({
+            url:'/LookUpWord',
+            type:'get',
+            data:{word:search},
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                console.log(res);
+            }
+        });
+        */
+    
+    },
+    handleCancel: function() {
+        if (confirm('Are you sure you want to cancel?')) {
+          this.refs.modal.close();
+        }
     },
     render: function(){
+        var modal = null;
+        modal = (
+          <BootstrapModal
+            ref="modal"
+            confirm="OK"
+            cancel="Cancel"
+            onCancel={this.handleCancel}
+            onConfirm={this.closeModal}
+            title="Hello, Bootstrap!">
+              This is a React component powered by jQuery and Bootstrap!
+          </BootstrapModal>
+        );
         return (
-            <form className="navbar-form navbar-right" role="search" onSubmit={this.searchHandle}>
+            <form className="navbar-form navbar-right" >
                 <div className="form-group">
-                    <input ref="searchInput" type="text" className="form-control" placeholder="Search"/>
+                    <input ref="searchInput" type="text" className="form-control" placeholder="搜索单词"/>
                 </div>
-                <button type="submit" className="btn btn-default">Submit</button>
+                <button type="button" className="btn btn-default" onClick={this.searchHandle}>搜索</button>
+                {modal}
             </form>
         );
+    },
+    openModal: function() {
+        this.refs.modal.open();
+    },
+    closeModal: function() {
+        this.refs.modal.close();
     }
 });
 

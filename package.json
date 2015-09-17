@@ -20,6 +20,7 @@
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
-    "mongoskin": "^1.4.13"
+    "mongoskin": "^1.4.13",
+    "request": "^2.62.0"
   }
 }

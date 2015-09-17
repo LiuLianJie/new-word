@@ -1,4 +1,6 @@
 var path = require('path');
+var http = require('http');
+var request = require('request');
 var express = require('express');
 var session = require('express-session');
 var app = express();
@@ -78,6 +80,16 @@ app.get('/words',function(req,res){
 			res.json(JSON.stringify(data));
 		}else{
 			var data = {s:1,m:'success',d:result};
+			res.json(JSON.stringify(data));
+		}
+	});
+});
+
+app.get('/LookUpWord',function(req,res){
+	var word = req.query.word;
+	request('https://api.shanbay.com/bdc/search/?word='+word, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+	 		var data = {s:1,m:'success',d:body};
 			res.json(JSON.stringify(data));
 		}
 	});
