@@ -58,12 +58,6 @@ var LoginForm = React.createClass({
 		);
 	}
 });
-/*
-React.render(
-	<LoginForm />,
-	document.getElementById('container')
-);
-*/
 
 var NavSearchBar = React.createClass({
     render: function(){
