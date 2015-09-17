@@ -94,8 +94,8 @@ var WordItem = React.createClass({
     render: function(){
         return(
             <div>
-                <h2>cabnnsdfsdf</h2>
-                <p>sdfsdf</p>
+                <h2>{this.props.word}</h2>
+                <p>{this.props.sentance}</p>
                 <hr/>
             </div>
         );
@@ -104,24 +104,44 @@ var WordItem = React.createClass({
 
 var WordList = React.createClass({
     render: function(){
+        
+        var wordlistNode = this.props.lists.map(function(word){
+            return (
+                <WordItem word={word.word} sentance={word.sentance}/>
+            )
+        });
         return(
             <div className="col-md-8 col-md-offset-2">
-                <WordItem word="ss" sentance="sfsdfsdf"/>
-                <WordItem word="sdf" sentance="234234"/>
-                <WordItem word="234" sentance="sfsdfsdf"/>
-                <WordItem word="ssdsf" sentance="sfsdfsdf"/>
-                <WordItem word="ssdfsdf" sentance="sfsdfsdf"/>
+                {wordlistNode}
             </div>
         );
     }
 });
+
+var lists = [
+            {word:'ss',sentance:'sdfsdf'},
+            {word:'sdg',sentance:'234234'},
+            {word:'23423',sentance:'ssdf234'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'},
+            {word:'j23j2',sentance:'ssdf134'}
+        ];
 
 var MainPage = React.createClass({
     render: function(){
         return (
             <div>
                 <NavHeader/>
-                <WordList />
+                <WordList lists={lists}/>
             </div>
         );
     }
