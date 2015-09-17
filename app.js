@@ -59,15 +59,28 @@ app.get('/register',function(req,res){
 			}
 			db.collection('user').insert(userDoc,function(err,result){
 				if(err) throw err;
-				var result = {s:1,m:'success',d:JSON.stringify(result)};
-				res.json(JSON.stringify(result));
+				var data = {s:1,m:'success',d:JSON.stringify(result)};
+				res.json(JSON.stringify(data));
 			});
 		}else{
-			var result = {s:0,m:'username exist',d:''};
-			res.json(JSON.stringify(result));
+			var data = {s:0,m:'username exist',d:''};
+			res.json(JSON.stringify(data));
 		}
 	});
 	
+});
+
+app.get('/words',function(req,res){
+	db.collection('words').find().toArray(function(err,result){
+		if(err) throw err;
+		if(result == null || result.length == 0){
+			var data = {s:0,m:'list is empty',d:''};
+			res.json(JSON.stringify(data));
+		}else{
+			var data = {s:1,m:'success',d:result};
+			res.json(JSON.stringify(data));
+		}
+	});
 });
 
 app.listen(app.get('port'),function(){

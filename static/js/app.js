@@ -60,11 +60,24 @@ var LoginForm = React.createClass({
 });
 
 var NavSearchBar = React.createClass({
+    searchHandle: function(){
+        var mainpage = this.props.mainpage;
+        console.log(mainpage.state.wordlist);
+        var search = React.findDOMNode(this.refs.searchInput).value;
+        if(!search){
+            alert('不能为空');
+            return;
+        }
+        var newwords = mainpage.state.wordlist.concat({word:search,sentence:'333'});
+        mainpage.setState({wordlist:newwords});
+        //this.props.mainpage.setState({data:d})
+        //alert('searchHandle');
+    },
     render: function(){
         return (
-            <form className="navbar-form navbar-right" role="search">
+            <form className="navbar-form navbar-right" role="search" onSubmit={this.searchHandle}>
                 <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Search"/>
+                    <input ref="searchInput" type="text" className="form-control" placeholder="Search"/>
                 </div>
                 <button type="submit" className="btn btn-default">Submit</button>
             </form>
@@ -81,7 +94,7 @@ var NavHeader = React.createClass({
                         <a className="navbar-brand" href="#">
                             smallfish
                         </a>
-                        <NavSearchBar />
+                        <NavSearchBar mainpage={this.props.mainpage}/>
                         <button type="button" className="btn btn-default navbar-btn navbar-right pull-right">Sign in</button>
                     </div>
                 </div>
@@ -95,7 +108,7 @@ var WordItem = React.createClass({
         return(
             <div>
                 <h2>{this.props.word}</h2>
-                <p>{this.props.sentance}</p>
+                <p>{this.props.sentence}</p>
                 <hr/>
             </div>
         );
@@ -104,12 +117,18 @@ var WordItem = React.createClass({
 
 var WordList = React.createClass({
     render: function(){
-        
-        var wordlistNode = this.props.lists.map(function(word){
-            return (
-                <WordItem word={word.word} sentance={word.sentance}/>
-            )
-        });
+        var wordlistNode = null;
+        var wordlist = this.props.wordlist;
+        if(wordlist!=null || wordlist.length >0){
+            wordlistNode = wordlist.map(function(word){
+                return (
+                    <WordItem word={word.word} sentence={word.sentence}/>
+                )
+            });
+        }else{
+            wordlistNode = function(){ return( <div>loading...</div> )}
+        }
+
         return(
             <div className="col-md-8 col-md-offset-2">
                 {wordlistNode}
@@ -118,30 +137,33 @@ var WordList = React.createClass({
     }
 });
 
-var lists = [
-            {word:'ss',sentance:'sdfsdf'},
-            {word:'sdg',sentance:'234234'},
-            {word:'23423',sentance:'ssdf234'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'},
-            {word:'j23j2',sentance:'ssdf134'}
-        ];
-
 var MainPage = React.createClass({
+    getInitialState: function(){
+        return {
+            wordlist:[]
+        };
+    },
+    componentDidMount: function(){
+        $.ajax({
+            url:'/words',
+            type:'get',
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                console.log(res);
+                if(res.s){
+                    this.setState({wordlist:res.d});
+                }else{
+                    alert(res['m']);
+                }
+            }.bind(this)
+        });
+    },
     render: function(){
         return (
             <div>
-                <NavHeader/>
-                <WordList lists={lists}/>
+                <NavHeader mainpage={this} />
+                <WordList wordlist={this.state.wordlist}/>
             </div>
         );
     }
