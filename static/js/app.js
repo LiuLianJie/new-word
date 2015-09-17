@@ -118,17 +118,21 @@ var BootstrapModal = React.createClass({
 });
 
 var NavSearchBar = React.createClass({
+    getInitialState: function(){
+        return {
+            wordDetail:{}
+        }
+    },
     searchHandle: function(){
         this.refs.modal.open();
-        /*
+
         var mainpage = this.props.mainpage;
         var search = React.findDOMNode(this.refs.searchInput).value;
         if(!search){
             alert('不能为空');
             return;
         }
-        */
-        /*
+
         $.ajax({
             url:'/LookUpWord',
             type:'get',
@@ -136,16 +140,38 @@ var NavSearchBar = React.createClass({
             dataType:'json',
             success:function(data){
                 var res = JSON.parse(data);
-                console.log(res);
-            }
+                var resd = JSON.parse(res.d);
+                console.log(resd);
+                this.setState({wordDetail:resd.data});
+            }.bind(this)
         });
-        */
-    
+
     },
     handleCancel: function() {
-        if (confirm('Are you sure you want to cancel?')) {
-          this.refs.modal.close();
-        }
+        this.refs.modal.close();
+    },
+    addHandle: function(){
+        console.log('addHandle');
+        var mainpage = this.props.mainpage;
+        
+        $.ajax({
+            url:'/addWord',
+            type:'get',
+            data:{word:this.state.wordDetail.content,sentence:'sss'},
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                console.log(JSON.parse(res.d)[0]);
+                var newwords = mainpage.state.wordlist.concat(JSON.parse(res.d));
+                mainpage.setState({wordlist:newwords});
+                this.refs.modal.close();
+            }.bind(this)
+        });
+    },
+    soundHandle: function(){
+        console.log('soundHandle');
+        var wordSound = React.findDOMNode(this.refs.wordSound);
+        wordSound.play();
     },
     render: function(){
         var modal = null;
@@ -156,8 +182,17 @@ var NavSearchBar = React.createClass({
             cancel="Cancel"
             onCancel={this.handleCancel}
             onConfirm={this.closeModal}
-            title="Hello, Bootstrap!">
-              This is a React component powered by jQuery and Bootstrap!
+            title={this.state.wordDetail.content}>
+              <audio ref="wordSound" src={this.state.wordDetail.us_audio}></audio>
+              <button type="button" className="btn btn-default btn-xs" aria-label="Left Align" onClick={this.addHandle}>
+                  <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              </button>
+
+              <p>[{this.state.wordDetail.pronunciation}]</p>
+              <button type="button" className="btn btn-default btn-xs" aria-label="Left Align" onClick={this.soundHandle}>
+                  <span className="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
+              </button>
+              <p>{this.state.wordDetail.definition}</p>
           </BootstrapModal>
         );
         return (
@@ -179,16 +214,33 @@ var NavSearchBar = React.createClass({
 });
 
 var NavHeader = React.createClass({
+    logout: function(){
+        $.ajax({
+            url:'/logout',
+            type:'get',
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                if(res.s){
+                    this.props.mainpage.props.router.navigate("login",{trigger:true});
+                }else{
+                    alert(res['m']);
+                }
+            }.bind(this)
+        });
+
+        router.navigate("",{trigger: true});
+    },
     render: function(){
         return (
             <nav className="navbar navbar-inverse">
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <a className="navbar-brand" href="#">
-                            smallfish
+                            smallfish words
                         </a>
                         <NavSearchBar mainpage={this.props.mainpage}/>
-                        <button type="button" className="btn btn-default navbar-btn navbar-right pull-right">Sign in</button>
+                        <button type="button" className="btn btn-default navbar-btn navbar-right pull-right" onClick={this.logout}>退出</button>
                     </div>
                 </div>
             </nav>

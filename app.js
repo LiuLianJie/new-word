@@ -44,6 +44,12 @@ app.get('/login',function(req,res){
 	});
 });
 
+app.get('/logout',function(req,res){
+	req.session.userid = null;
+	var result = {'s':1,'m':''};
+	res.json(JSON.stringify(result));
+});
+
 app.get('/register',function(req,res){
 	var username = req.query.username;
 	var password = req.query.password;
@@ -93,6 +99,26 @@ app.get('/LookUpWord',function(req,res){
 			res.json(JSON.stringify(data));
 		}
 	});
+});
+
+app.get('/addWord',function(req,res){
+	var word = req.query.word;
+	var sentence = req.query.sentence;
+	var wordDoc = {word:word,sentence:sentence};
+	db.collection('words').find({word:word}).toArray(function(err,result){
+		if(err) throw err;
+		if(result == null || result.length == 0){
+			db.collection('words').insert(wordDoc,function(err,result){
+				if(err) throw err;
+				var data = {s:1,m:'success',d:JSON.stringify(result)};
+				res.json(JSON.stringify(data));
+			});
+		}else{
+			var data = {s:0,m:'word exit',d:null};
+			res.json(JSON.stringify(data));
+		}
+	});
+
 });
 
 app.listen(app.get('port'),function(){
