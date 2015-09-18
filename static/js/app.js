@@ -154,6 +154,7 @@ var NavSearchBar = React.createClass({
         console.log('addHandle');
         var mainpage = this.props.mainpage;
         
+        /*
         $.ajax({
             url:'/addWord',
             type:'get',
@@ -167,11 +168,18 @@ var NavSearchBar = React.createClass({
                 this.refs.modal.close();
             }.bind(this)
         });
+        */
+        this.refs.modal.close();
+        this.refs.sentenceModal.open();  
     },
     soundHandle: function(){
         console.log('soundHandle');
         var wordSound = React.findDOMNode(this.refs.wordSound);
         wordSound.play();
+    },
+    finishHandle: function(){
+        var sentence = React.findDOMNode(this.refs.sentenceInput).value;
+        alert(sentence);
     },
     render: function(){
         var modal = null;
@@ -195,6 +203,24 @@ var NavSearchBar = React.createClass({
               <p>{this.state.wordDetail.definition}</p>
           </BootstrapModal>
         );
+        var sentenceModal = null;
+        sentenceModal = (
+            <BootstrapModal
+                ref="sentenceModal"
+                confirm="OK"
+                cancel="Cancel"
+                onCancel={this.sentenceHandleCancel}
+                onConfirm={this.sentenceCloseModal}
+                title='请输入助记句子'>
+
+                    <textarea ref="sentenceInput" className="form-control" rows="3"></textarea>
+                          
+                    
+                    <button type="button" className="btn btn-default" onClick={this.finishHandle}>完成</button>
+                          
+
+            </BootstrapModal>
+        ); 
         return (
             <form className="navbar-form navbar-right" >
                 <div className="form-group">
@@ -202,6 +228,7 @@ var NavSearchBar = React.createClass({
                 </div>
                 <button type="button" className="btn btn-default" onClick={this.searchHandle}>搜索</button>
                 {modal}
+                {sentenceModal}
             </form>
         );
     },
@@ -210,6 +237,12 @@ var NavSearchBar = React.createClass({
     },
     closeModal: function() {
         this.refs.modal.close();
+    },
+    sentenceHandleCancel:function(){
+        this.refs.sentenceModal.close();
+    },
+    sentenceCloseModal: function(){
+        this.refs.sentenceModal.close();
     }
 });
 
