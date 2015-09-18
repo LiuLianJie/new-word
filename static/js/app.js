@@ -126,7 +126,7 @@ var NavSearchBar = React.createClass({
     searchHandle: function(){
         this.refs.modal.open();
 
-        var mainpage = this.props.mainpage;
+        
         var search = React.findDOMNode(this.refs.searchInput).value;
         if(!search){
             alert('不能为空');
@@ -153,22 +153,8 @@ var NavSearchBar = React.createClass({
     addHandle: function(){
         console.log('addHandle');
         var mainpage = this.props.mainpage;
-        
-        /*
-        $.ajax({
-            url:'/addWord',
-            type:'get',
-            data:{word:this.state.wordDetail.content,sentence:'sss'},
-            dataType:'json',
-            success:function(data){
-                var res = JSON.parse(data);
-                console.log(JSON.parse(res.d)[0]);
-                var newwords = mainpage.state.wordlist.concat(JSON.parse(res.d));
-                mainpage.setState({wordlist:newwords});
-                this.refs.modal.close();
-            }.bind(this)
-        });
-        */
+
+        this.content = this.state.wordDetail.content;
         this.refs.modal.close();
         this.refs.sentenceModal.open();  
     },
@@ -178,8 +164,28 @@ var NavSearchBar = React.createClass({
         wordSound.play();
     },
     finishHandle: function(){
-        var sentence = React.findDOMNode(this.refs.sentenceInput).value;
-        alert(sentence);
+        var mainpage = this.props.mainpage;
+        this.sentence = React.findDOMNode(this.refs.sentenceInput).value;
+        console.log({word:this.content,sentence:this.sentence});
+
+        $.ajax({
+            url:'/addWord',
+            type:'get',
+            data:{word:this.content,sentence:this.sentence},
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                console.log(JSON.parse(res.d)[0]);
+                var newwords = mainpage.state.wordlist.concat(JSON.parse(res.d));
+                mainpage.setState({wordlist:newwords});
+                this.refs.modal.close();
+                this.content = '';
+                this.sentence = '';
+                React.findDOMNode(this.refs.searchInput).value = '';
+                React.findDOMNode(this.refs.sentenceInput).value = '';
+                this.refs.sentenceModal.close();
+            }.bind(this)
+        });
     },
     render: function(){
         var modal = null;
@@ -282,10 +288,39 @@ var NavHeader = React.createClass({
 });
 
 var WordItem = React.createClass({
+    componentDidMount:function(){
+
+    },
+    deleteHandle: function(){
+
+        
+        var word = this.props.word;
+        var index = this.props.index;
+        
+        $.ajax({
+            url:'/delete',
+            type:'get',
+            data:{word:word},
+            dataType:'json',
+            success:function(data){
+                var res = JSON.parse(data);
+                if(res.s){
+                    var wordlist = this.props.mainpage.state.wordlist;
+                    wordlist.splice(index,1);
+                    this.props.mainpage.setState({wordlist:wordlist});
+                }else{
+                    alert(res['m']);
+                }
+            }.bind(this)
+        });
+    },
     render: function(){
         return(
-            <div>
+            <div ref="wordlist">
                 <h2>{this.props.word}</h2>
+                <button className="btn btn-default pull-right" onClick={this.deleteHandle}>
+                    I forget
+                </button>
                 <p>{this.props.sentence}</p>
                 <hr/>
             </div>
@@ -296,13 +331,13 @@ var WordItem = React.createClass({
 var WordList = React.createClass({
     render: function(){
         var wordlistNode = null;
-        var wordlist = this.props.wordlist;
+        var wordlist = this.props.mainpage.state.wordlist;
         if(wordlist!=null || wordlist.length >0){
-            wordlistNode = wordlist.map(function(word){
+            wordlistNode = wordlist.map(function(word,index){
                 return (
-                    <WordItem word={word.word} sentence={word.sentence}/>
+                    <WordItem index={index} word={word.word} sentence={word.sentence} mainpage={this.props.mainpage}/>
                 )
-            });
+            }.bind(this));
         }else{
             wordlistNode = function(){ return( <div>loading...</div> )}
         }
@@ -341,7 +376,7 @@ var MainPage = React.createClass({
         return (
             <div>
                 <NavHeader mainpage={this} />
-                <WordList wordlist={this.state.wordlist}/>
+                <WordList mainpage={this}/>
             </div>
         );
     }

@@ -118,7 +118,15 @@ app.get('/addWord',function(req,res){
 			res.json(JSON.stringify(data));
 		}
 	});
+});
 
+app.get('/delete',function(req,res){
+	var word = req.query.word;
+	db.collection('words').remove({word:word},function(err){
+		if(err) throw err
+		var data = {s:1,m:'success',d:null};
+		res.json(JSON.stringify(data));
+	});
 });
 
 app.listen(app.get('port'),function(){
