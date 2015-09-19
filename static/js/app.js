@@ -6,7 +6,8 @@ var LoginForm = React.createClass({
 			password:'ss'
 		};
 	},
-	loginhandle: function(){
+	loginhandle: function(e){
+        e.preventDefault();
 		var username = React.findDOMNode(this.refs.usernameInput).value;
 		var password = React.findDOMNode(this.refs.passwordInput).value;
 		var router = this.props.router;
@@ -45,14 +46,14 @@ var LoginForm = React.createClass({
 		var username = this.state.username;
 		var password = this.state.password;
 		return (
-			<form className="form-signin">
+			<form className="form-signin" onSubmit={this.loginhandle}>
 		        <h2 className="form-signin-heading">请登录</h2>
 		        <label for="inputEmail" className="sr-only">请输入邮箱</label>
 		        <input ref="usernameInput" type="text" id="inputEmail" className="form-control" placeholder="请输入邮箱"/>
 		        <label for="inputPassword" className="sr-only">请输入密码</label>
 		        <input ref="passwordInput" type="password" id="inputPassword" className="form-control" placeholder="请输入密码"/>
 
-		        <button className="btn btn-lg btn-primary btn-block" type="button" onClick={this.loginhandle}>登入</button>
+		        <button className="btn btn-lg btn-primary btn-block" type="submit" >登入</button>
 		    	<button className="btn btn-lg btn-default btn-block" type="button" onClick={this.goRegisterHandle}>注册</button>
 		    </form>
 		);
@@ -123,7 +124,8 @@ var NavSearchBar = React.createClass({
             wordDetail:{}
         }
     },
-    searchHandle: function(){
+    searchHandle: function(e){
+        e.preventDefault();
         this.refs.modal.open();
 
         
@@ -228,11 +230,11 @@ var NavSearchBar = React.createClass({
             </BootstrapModal>
         ); 
         return (
-            <form className="navbar-form navbar-right" >
+            <form className="navbar-form navbar-right" onSubmit={this.searchHandle}>
                 <div className="form-group">
                     <input ref="searchInput" type="text" className="form-control" placeholder="搜索单词"/>
                 </div>
-                <button type="button" className="btn btn-default" onClick={this.searchHandle}>搜索</button>
+                <button type="submit" className="btn btn-default">搜索</button>
                 {modal}
                 {sentenceModal}
             </form>
@@ -383,7 +385,9 @@ var MainPage = React.createClass({
 });
 
 var RegisterForm = React.createClass({
-    registerHandle: function(){
+    registerHandle: function(e){
+        e.preventDefault();
+        
     	var username = React.findDOMNode(this.refs.usernameInput).value;
     	var password = React.findDOMNode(this.refs.passwordInput).value;
     	var rePassword = React.findDOMNode(this.refs.rePasswordInput).value;
@@ -426,7 +430,7 @@ var RegisterForm = React.createClass({
     },
     render: function(){
         return (
-        	<form className="form-register">
+        	<form className="form-register" onSubmit={this.registerHandle}>
 		        <h2 className="form-register-heading">请注册</h2>
 		        <label for="inputEmail" className="sr-only">请输入邮箱</label>
 		        <input ref="usernameInput" type="text" id="inputEmail" className="form-control" placeholder="请输入邮箱"/>
@@ -435,7 +439,7 @@ var RegisterForm = React.createClass({
 		        <label for="inputPassword" className="sr-only">重新输入密码</label>
 		        <input ref="rePasswordInput" type="password" id="reInputPassword" className="form-control" placeholder="重新输入密码"/>
 
-		        <button className="btn btn-lg btn-primary btn-block" type="button" onClick={this.registerHandle}>注册</button>
+		        <button className="btn btn-lg btn-primary btn-block" type="submit">注册</button>
 		    	<button className="btn btn-lg btn-default btn-block" type="button" onClick={this.goLoginHandle}>登录</button>
 		    </form>
         )
